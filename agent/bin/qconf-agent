@@ -32,7 +32,7 @@ fi
 # work correctly with a thread-based MPM; notably PHP will refuse to start.
 
 qconf_agent=/usr/sbin/qconf_agent
-pidfile=/var/run/${prog}.pid
+pidfile=/usr/local/qconf/pid
 lockfile=/var/lock/subsys/${prog}
 RETVAL=0
 

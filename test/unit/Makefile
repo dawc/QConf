@@ -8,6 +8,7 @@ CC			= g++
 GTEST_DIR 	= /usr/local/gtest
 CPPFLAGS 	+= -isystem $(GTEST_DIR)/include
 CCFLAGS 	+= -g -Wall -DQCONF_CURL_ENABLE -pthread -I$(GTEST_DIR)/include -I/usr/local/include/zookeeper\
+			   -I/usr/include/zookeeper \
 			   -I$(QCONF_BASE) -I$(QCONF_BASE)/qlibc -I$(DRIVER_BASE) -I$(DRIVER_BASE)/../include\
 			   -I/usr/local/include\
 			   -I$(AGENT_BASE) -D__STDC_FORMAT_MACROS

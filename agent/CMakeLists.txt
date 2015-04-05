@@ -2,10 +2,11 @@
 if (${HAS_PREFIX})
     set(AGENT_COMPILE_FLAGS "-c -D__STDC_FORMAT_MACROS -DQCONF_INTERNAL
     -DQCONF_CURL_ENABLE
-    -DQCONF_AGENT_DIR=${CMAKE_INSTALL_PREFIX} -fPIC -g -pthread -Wall")
+    -DQCONF_AGENT_DIR=${QCONF_AGENT_DIR} -fPIC -g -pthread -Wall")
 else()
     set(AGENT_COMPILE_FLAGS "-c -D__STDC_FORMAT_MACROS -DQCONF_CURL_ENABLE
-    -DQCONF_AGENT_DIR=${CMAKE_INSTALL_PREFIX} -fPIC -g -pthread -Wall")
+    -DQCONF_INTERNAL
+    -DQCONF_AGENT_DIR=${QCONF_AGENT_DIR} -fPIC -g -pthread -Wall")
 endif()
 #set(LINK_FLAGS "-lpthread -lrt")
 
@@ -33,7 +34,7 @@ set_source_files_properties(../base/qlibc/qhasharr.c PROPERTIES LANGUAGE CXX )
 add_definitions(${AGENT_COMPILE_FLAGS})
 add_executable(qconf_agent ${DIR_SRCS})
 
-#execute_process(COMMAND echo "cmake install prefix : "${CMAKE_INSTALL_PREFIX})
+#execute_process(COMMAND echo "cmake install prefix : "${QCONF_AGENT_DIR})
 
 # link libpthread
 find_package (Threads)
@@ -69,7 +70,7 @@ target_link_libraries(qconf_agent ${PROJECT_SOURCE_DIR}/../deps/gdbm/_install/li
 file(WRITE lockfile "")
 
 install(CODE "execute_process(WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/bin COMMAND
-sed -i s:^agentdir=.*$:agentdir=${CMAKE_INSTALL_PREFIX}:g agent-cmd.sh)")
+sed -i s:^agentdir=.*$:agentdir=${QCONF_AGENT_DIR}:g agent-cmd.sh)")
 
 install(DIRECTORY bin DESTINATION .)
 install(DIRECTORY conf DESTINATION .)

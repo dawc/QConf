@@ -9,8 +9,8 @@ URL:     http://github.com/.../%{name}-%{version}.tgz
 Source0:	%{name}-%{version}.tgz
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
-BuildRequires: automake >= 1.14
-Requires:	libstdc++
+BuildRequires: automake >= 1.14, gdbm-devel, libcurl-devel, libzookeeper-devel
+Requires:	libstdc++, libcurl, gdbm, libzookeeper
 
 %description
 Qihoo Distrubuted Configuration Management System
@@ -30,8 +30,10 @@ rm -rf %{buildroot}
 cd build && make install
 
 mkdir -p %{buildroot}/usr/sbin/
+mkdir -p %{buildroot}/usr/bin/
 mkdir -p %{buildroot}/etc/rc.d/init.d/
 cp %{buildroot}/usr/local/qconf/bin/qconf_agent %{buildroot}/usr/sbin/qconf_agent
+cp %{buildroot}/usr/local/qconf/bin/qconf       %{buildroot}/usr/bin/qconf
 mv %{buildroot}/usr/local/qconf/bin/qconf-agent %{buildroot}/etc/rc.d/init.d/
 ln -sf /usr/local/qconf/conf %{buildroot}/etc/qconf
 
@@ -49,17 +51,9 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-/usr/local/qconf/bin/agent-cmd.sh
-/usr/local/qconf/bin/qconf
-/usr/local/qconf/bin/qconf_agent
-/usr/local/qconf/conf/agent.conf
-/usr/local/qconf/conf/idc.conf
-/usr/local/qconf/conf/localidc
-/usr/local/qconf/include/driver_common.h
-/usr/local/qconf/include/qconf.h
-/usr/local/qconf/include/qconf_errno.h
-/usr/local/qconf/lib/libqconf.a
-/usr/local/qconf/lib/libqconf.so
+%config /usr/local/qconf/conf/
+/usr/local/qconf/include/
+/usr/local/qconf/lib/
 /usr/local/qconf/lock/lockfile
 /usr/local/qconf/version
 /usr/local/qconf/cmd/
@@ -69,9 +63,13 @@ rm -rf %{buildroot}
 /usr/local/qconf/monitor/
 /usr/local/qconf/result/
 /usr/local/qconf/script/
-/usr/sbin/
+%attr(0755,-,-) /usr/local/qconf/bin/agent-cmd.sh
+%attr(0755,-,-) /usr/local/qconf/bin/qconf
+%attr(0755,-,-) /usr/local/qconf/bin/qconf_agent
+%attr(0755,-,-) /usr/bin/qconf
+%attr(0755,-,-) /usr/sbin/qconf_agent
+%attr(0755,-,-) /etc/rc.d/init.d/qconf-agent
 /etc/qconf/
-/etc/rc.d/init.d/
 
 %changelog
 
