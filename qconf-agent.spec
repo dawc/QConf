@@ -21,7 +21,8 @@ Qihoo Distrubuted Configuration Management System
 
 %build
 
-mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=%{buildroot}/usr/local/qconf -DQCONF_AGENT_DIR=/usr/local/qconf
+mkdir build && cd build && cmake .. \
+    -DCMAKE_INSTALL_PREFIX=%{buildroot}/usr/local/qconf -DQCONF_AGENT_DIR=/usr/local/qconf -DHAS_PREFIX=1
 make %{?_smp_mflags}
 
 

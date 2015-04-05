@@ -29,7 +29,7 @@ if test "$PHP_QCONF" != "no"; then
      fi
    else
      PHP_LIBQCONF_DIR="no"
-     for i in /usr/local/include/qconf; do
+     for i in /usr/local/include/qconf /usr/local/qconf/include; do
        if test -r "$i/qconf.h"; then
          PHP_LIBQCONF_INCDIR=$i
      break
@@ -46,7 +46,10 @@ dnl    PHP_LIBQCONF_INCDIR="/usr/local/include/qconf"
 
     PHP_REQUIRE_CXX()
     PHP_ADD_LIBRARY(stdc++, "", EXTRA_LDFLAGS)
+    PHP_ADD_LIBRARY(qconf, "", EXTRA_LDFLAGS)
+    PHP_ADD_LIBPATH("/usr/local/qconf/lib")
     PHP_NEW_EXTENSION(qconf, php_qconf.c $SESSION_EXTRA_FILES, $ext_shared)
+    CFLAGS=-DQCONF_INTERNAL
 
 dnl  fi
 
