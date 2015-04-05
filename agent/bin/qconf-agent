@@ -1,0 +1,95 @@
+#!/bin/bash
+#
+# qconf_agent Startup script for the QConf Agent
+#
+# chkconfig: - 83 17
+# description: Qihoo Distrubuted Configuration Management System
+# processname: qconf_agent
+# pidfile: /var/run/qconf_agent.pid
+# config: /etc/sysconfig/qconf_agent
+#
+### BEGIN INIT INFO
+# Provides: aconf_agent
+# Required-Start: $local_fs $remote_fs $network $named
+# Required-Stop: $local_fs $remote_fs $network
+# Short-Description: start and stop QConf Agent
+# Description: Qihoo Distrubuted Configuration Management System
+### END INIT INFO
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# What were we called? Multiple instances of the same daemon can be
+# created by creating suitably named symlinks to this startup script
+prog=$(basename $0 | sed -e 's/^[SK][0-9][0-9]//')
+
+if [ -f /etc/sysconfig/${prog} ]; then
+        . /etc/sysconfig/${prog}
+fi
+
+# Set HTTPD=/usr/sbin/httpd.worker in /etc/sysconfig/httpd to use a server
+# with the thread-based "worker" MPM; BE WARNED that some modules may not
+# work correctly with a thread-based MPM; notably PHP will refuse to start.
+
+qconf_agent=/usr/sbin/qconf_agent
+pidfile=/var/run/${prog}.pid
+lockfile=/var/lock/subsys/${prog}
+RETVAL=0
+
+# The semantics of these two functions differ from the way apachectl does
+# things -- attempting to start while running is a failure, and shutdown
+# when not running is also a failure.  So we just do it the way init scripts
+# are expected to behave here.
+start() {
+        echo -n $"Starting $prog: "
+        daemon --pidfile=${pidfile} $qconf_agent $OPTIONS
+        RETVAL=$?
+        echo
+        [ $RETVAL = 0 ] && touch ${lockfile}
+        return $RETVAL
+}
+stop() {
+	echo -n $"Stopping $prog: "
+	killproc -p ${pidfile} -d 10 $qconf_agent
+	RETVAL=$?
+	echo
+	[ $RETVAL = 0 ] && rm -f ${lockfile} ${pidfile}
+}
+reload() {
+	echo -n $"Reloading $prog: "
+	killproc -p ${pidfile} $qconf_agent -HUP
+	RETVAL=$?
+	echo
+}
+
+# See how we were called.
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  status)
+        if ! test -f ${pidfile}; then
+            echo $prog is stopped
+            RETVAL=3
+        else  
+            status -p ${pidfile} $qconf_agent
+            RETVAL=$?
+        fi
+        ;;
+  restart)
+	stop
+	start
+	;;
+  reload)
+        reload
+	;;
+  *)
+	echo $"Usage: $prog {start|stop|restart|reload|status|help}"
+	exit 1
+esac
+
+exit $RETVAL
+

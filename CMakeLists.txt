@@ -1,10 +1,18 @@
 #CMakelist root
 set(HAS_PREFIX OFF CACHE BOOL "wether add prefix of qconf node on zookeeper")
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set(CMAKE_INSTALL_PREFIX
+
+if(NOT QCONF_AGENT_DIR)
+    set(QCONF_AGENT_DIR
         "/usr/local/qconf" CACHE PATH "qconf install prefix" FORCE
         )
+endif(NOT QCONF_AGENT_DIR)
+
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set(CMAKE_INSTALL_PREFIX
+        "${QCONF_AGENT_DIR}" CACHE PATH "qconf install prefix" FORCE
+        )
 endif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+
 
 cmake_minimum_required(VERSION 2.6)
 #build libzookeeper
