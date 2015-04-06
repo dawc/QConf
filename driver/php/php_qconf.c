@@ -76,18 +76,17 @@ static PHP_METHOD(Qconf, getConf)
 	}
 
 	char buf[QCONF_CONF_BUF_MAX_LEN];
-	int buf_len = 0;
+	size_t buf_len = sizeof(buf);
 	int ret = 0;
 
 	if (QCONF_NOWAIT == get_flags)
 	{
-		ret = qconf_aget_conf(path, buf, sizeof(buf), idc);
+		ret = qconf_aget_conf(path, buf, &buf_len, idc);
 	}
 	else
 	{
-		ret = qconf_get_conf(path, buf, sizeof(buf), idc);
+		ret = qconf_get_conf(path, buf, &buf_len, idc);
 	}
-	buf_len = strlen(buf);
 
 	if (QCONF_OK == ret)
 	{
@@ -117,18 +116,17 @@ static PHP_METHOD(Qconf, getHost)
 	}
 
 	char buf[QCONF_HOST_BUF_MAX_LEN];
-	int buf_len = 0;
+	size_t buf_len = sizeof(buf);
 	int ret = 0;
 
 	if (QCONF_NOWAIT == get_flags)
 	{
-		ret = qconf_aget_host(path, buf, sizeof(buf), idc);
+		ret = qconf_aget_host(path, buf, &buf_len, idc);
 	}
 	else
 	{
-		ret = qconf_get_host(path, buf, sizeof(buf), idc);
+		ret = qconf_get_host(path, buf, &buf_len, idc);
 	}
-	buf_len = strlen(buf);
 
 	if (QCONF_OK == ret)
 	{
@@ -434,18 +432,17 @@ static PHP_METHOD(QConfig, Get)
 	}
 
 	char buf[QCONF_CONF_BUF_MAX_LEN];
-	int buf_len = 0;
+	size_t buf_len = sizeof(buf);
 	int ret = 0;
 
 	if (QCONF_NOWAIT == get_flags)
 	{
-		ret = qconf_aget_conf(path, buf, sizeof(buf), idc);
+		ret = qconf_aget_conf(path, buf, &buf_len, idc);
 	}
 	else
 	{
-		ret = qconf_get_conf(path, buf, sizeof(buf), idc);
+		ret = qconf_get_conf(path, buf, &buf_len, idc);
 	}
-	buf_len = strlen(buf);
 
 	if (QCONF_OK == ret)
 	{

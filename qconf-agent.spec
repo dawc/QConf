@@ -9,10 +9,19 @@ URL:     http://github.com/.../%{name}-%{version}.tgz
 Source0:	%{name}-%{version}.tgz
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
-BuildRequires: automake >= 1.14, gdbm-devel, libcurl-devel, libzookeeper-devel
+BuildRequires: automake >= 1.14
 Requires:	libstdc++, libcurl, gdbm, libzookeeper
 
 %description
+Qihoo Distrubuted Configuration Management System
+
+
+%package devel
+Group : Development/Libraries
+Summary: Files need for building qconf clients
+Requires: automake >= 1.14 
+
+%description devel
 Qihoo Distrubuted Configuration Management System
 
 %prep
@@ -52,9 +61,15 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%attr(0755,-,-) /usr/local/qconf/bin/agent-cmd.sh
+%attr(0755,-,-) /usr/local/qconf/bin/qconf
+%attr(0755,-,-) /usr/local/qconf/bin/qconf_agent
+%attr(0755,-,-) /usr/bin/qconf
+%attr(0755,-,-) /usr/sbin/qconf_agent
+%attr(0755,-,-) /etc/rc.d/init.d/qconf-agent
 %config /usr/local/qconf/conf/
-/usr/local/qconf/include/
-/usr/local/qconf/lib/
+/etc/qconf/
+
 /usr/local/qconf/lock/lockfile
 /usr/local/qconf/version
 /usr/local/qconf/cmd/
@@ -64,13 +79,11 @@ rm -rf %{buildroot}
 /usr/local/qconf/monitor/
 /usr/local/qconf/result/
 /usr/local/qconf/script/
-%attr(0755,-,-) /usr/local/qconf/bin/agent-cmd.sh
-%attr(0755,-,-) /usr/local/qconf/bin/qconf
-%attr(0755,-,-) /usr/local/qconf/bin/qconf_agent
-%attr(0755,-,-) /usr/bin/qconf
-%attr(0755,-,-) /usr/sbin/qconf_agent
-%attr(0755,-,-) /etc/rc.d/init.d/qconf-agent
-/etc/qconf/
+/usr/local/qconf/lib/libqconf.so
+
+%files devel
+/usr/local/qconf/include/
+/usr/local/qconf/lib/libqconf.a
 
 %changelog
 

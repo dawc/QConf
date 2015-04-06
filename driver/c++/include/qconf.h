@@ -83,7 +83,7 @@ int destroy_string_vector(string_vector_t *nodes);
  *         QCONF_ERR_NOT_FOUND: if the key not exists
  *         QCONF_ERR_OTHER: other failed
  */
-int qconf_get_conf(const char *path, char *buf, unsigned int buf_len, const char *idc);
+int qconf_get_conf(const char *path, char *buf, size_t *buf_len, const char *idc);
 
 /**
  * Synchronize get all children nodes of key which is path
@@ -140,7 +140,7 @@ int qconf_get_allhost(const char *path, string_vector_t *nodes, const char *idc)
  *         QCONF_ERR_NOT_FOUND: if the key not exists
  *         QCONF_ERR_OTHER: other failed
  */
-int qconf_get_host(const char *path, char *buf, unsigned int buf_len, const char *idc);
+int qconf_get_host(const char *path, char *buf, size_t *buf_len, const char *idc);
 
 
 /**
@@ -156,7 +156,7 @@ int qconf_get_host(const char *path, char *buf, unsigned int buf_len, const char
  *         QCONF_ERR_NOT_FOUND: if the key not exists
  *         QCONF_ERR_OTHER: other failed
  */
-int qconf_aget_conf(const char *path, char *buf, unsigned int buf_len, const char *idc);
+int qconf_aget_conf(const char *path, char *buf, size_t *buf_len, const char *idc);
 
 /**
  * Asynchronize get all children nodes of key which is path
@@ -213,7 +213,7 @@ int qconf_aget_allhost(const char *path, string_vector_t *nodes, const char *idc
  *         QCONF_ERR_NOT_FOUND: if the key not exists
  *         QCONF_ERR_OTHER: other failed
  */
-int qconf_aget_host(const char *path, char *buf, unsigned int buf_len, const char *idc);
+int qconf_aget_host(const char *path, char *buf, size_t *buf_len, const char *idc);
 
 /**
  * Synchronize get all children nodes' key of path

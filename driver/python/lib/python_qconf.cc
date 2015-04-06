@@ -117,7 +117,8 @@ static PyObject* Qconf_get_conf(PyObject *self, PyObject *args)
     if (!PyArg_ParseTuple(args, "s|s", &path, &idc))
         return NULL;
     char value[QCONF_CONF_BUF_MAX_LEN];
-    int ret = qconf_get_conf(path, value, sizeof(value), idc);
+    size_t len = sizeof(value);
+    int ret = qconf_get_conf(path, value, &len, idc);
     if (QCONF_OK != ret)
     {
         print_error_message(ret);
@@ -134,7 +135,8 @@ static PyObject* Qconf_get_host(PyObject *self, PyObject *args)
     if (!PyArg_ParseTuple(args, "s|s", &path, &idc))
         return NULL;
     char host[QCONF_HOST_BUF_MAX_LEN] = {0};
-    int ret = qconf_get_host(path, host, sizeof(host), idc);
+    size_t len = sizeof(host);
+    int ret = qconf_get_host(path, host, &len, idc);
     if (QCONF_OK != ret)
     {
         print_error_message(ret);

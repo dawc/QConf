@@ -65,7 +65,8 @@ int main(int argc, char *argv[])
     {
         // Get the conf
         char value[QCONF_CONF_BUF_MAX_LEN];
-        ret = qconf_get_conf(path, value, sizeof(value), idc);
+        size_t len = sizeof(value);
+        ret = qconf_get_conf(path, value, &len, idc);
         if (QCONF_OK != ret)
         {
             printf("[ERROR]Failed to get conf! ret:%d\n", ret);
@@ -78,7 +79,8 @@ int main(int argc, char *argv[])
     {
         // Get the host
         char host[QCONF_HOST_BUF_MAX_LEN] = {0};
-        ret = qconf_get_host(path, host, sizeof(host), idc);
+        size_t len = sizeof(host);
+        ret = qconf_get_host(path, host, &len, idc);
         if (QCONF_OK != ret)
         {
             printf("[ERROR]Failed to get get host! ret:%d\n", ret);

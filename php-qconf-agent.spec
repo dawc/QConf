@@ -9,8 +9,8 @@ URL:		http://github.com/.../%{name}-%{version}.tgz
 Source0:	%{name}-%{version}.tgz
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
-BuildRequires:	qconf-agent
-Requires:	    php-devel
+BuildRequires:	qconf-agent, qconf-agent-devel, php-devel
+Requires:	    qconf-agent
 
 %description
 php ext for QConf Agent

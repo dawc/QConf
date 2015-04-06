@@ -19,11 +19,11 @@ static int qconf_get_batch_keys_native_(const char *path, string_vector_t *nodes
 #endif
 
 static int get_node_path(const string &path, string &real_path);
-static int qconf_get_conf_(const char *path, char *buf, size_t buf_len, const char *idc, int flags);
+static int qconf_get_conf_(const char *path, char *buf, size_t *buf_len, const char *idc, int flags);
 static int qconf_get_batch_conf_(const char *path, qconf_batch_nodes *bnodes, const char *idc, int flags);
 static int qconf_get_batch_keys_(const char *path, string_vector_t *nodes, const char *idc, int flags);
 static int qconf_get_allhost_(const char *path, string_vector_t *nodes, const char *idc, int flags);
-static int qconf_get_host_(const char *path, char *buf, size_t buf_len, const char *idc, int flags);
+static int qconf_get_host_(const char *path, char *buf, size_t *buf_len, const char *idc, int flags);
 
 int qconf_init()
 {
@@ -55,12 +55,12 @@ int destroy_string_vector(string_vector_t *nodes)
     return QCONF_OK;
 }
 
-int qconf_get_conf(const char *path, char *buf, unsigned int buf_len, const char *idc)
+int qconf_get_conf(const char *path, char *buf, size_t *buf_len, const char *idc)
 {
     return qconf_get_conf_(path, buf, buf_len, idc, QCONF_WAIT);
 }
 
-int qconf_aget_conf(const char *path, char *buf, unsigned int buf_len, const char *idc)
+int qconf_aget_conf(const char *path, char *buf, size_t *buf_len, const char *idc)
 {
     return qconf_get_conf_(path, buf, buf_len, idc, QCONF_NOWAIT);
 }
@@ -107,12 +107,12 @@ int qconf_aget_allhost(const char *path, string_vector_t *nodes, const char *idc
     return qconf_get_allhost_(path, nodes, idc, QCONF_NOWAIT);
 }
 
-int qconf_get_host(const char *path, char *buf, unsigned int buf_len, const char *idc)
+int qconf_get_host(const char *path, char *buf, size_t *buf_len, const char *idc)
 {
     return qconf_get_host_(path, buf, buf_len, idc, QCONF_WAIT);
 }
 
-int qconf_aget_host(const char *path, char *buf, unsigned int buf_len, const char *idc)
+int qconf_aget_host(const char *path, char *buf, size_t *buf_len, const char *idc)
 {
     return qconf_get_host_(path, buf, buf_len, idc, QCONF_NOWAIT);
 }
@@ -122,7 +122,7 @@ const char* qconf_version()
     return QCONF_DRIVER_CC_VERSION;
 }
 
-static int qconf_get_host_(const char *path, char *buf, size_t buf_len, const char *idc, int flags)
+static int qconf_get_host_(const char *path, char *buf, size_t *buf_len, const char *idc, int flags)
 {
     if (NULL == path || '\0' == *path || NULL == buf)
         return QCONF_ERR_PARAM;
@@ -146,12 +146,13 @@ static int qconf_get_host_(const char *path, char *buf, size_t buf_len, const ch
 
     unsigned int r = rand() % nodes.count;
     size_t node_len = strlen(nodes.data[r]);
-    if (node_len >= buf_len)
+    if (node_len >= *buf_len)
     {
         destroy_string_vector(&nodes);
         return QCONF_ERR_BUF_NOT_ENOUGH;
     }
 
+    *buf_len = node_len;
     memcpy(buf, nodes.data[r], node_len);
     buf[node_len] = '\0';
 
@@ -187,7 +188,7 @@ static int qconf_get_allhost_(const char *path, string_vector_t *nodes, const ch
     return ret;
 }
 
-static int qconf_get_conf_(const char *path, char *buf, size_t buf_len, const char *idc, int flags)
+static int qconf_get_conf_(const char *path, char *buf, size_t *buf_len, const char *idc, int flags)
 {
     if (NULL == path || '\0' == *path || NULL == buf)
         return QCONF_ERR_PARAM;
@@ -205,13 +206,14 @@ static int qconf_get_conf_(const char *path, char *buf, size_t buf_len, const ch
     ret = qconf_get(real_path, tmp_buf, tmp_idc, flags);
     if (QCONF_OK != ret) return ret;
 
-    if (tmp_buf.size() >= buf_len)
+    if (tmp_buf.size() >= *buf_len)
     {
         LOG_ERR("buf is not enough! value len:%zd, buf len:%zd",
-                tmp_buf.size(), buf_len);
+                tmp_buf.size(), *buf_len);
         return QCONF_ERR_BUF_NOT_ENOUGH;
     }
 
+    *buf_len = tmp_buf.size();
     memcpy(buf, tmp_buf.data(), tmp_buf.size());
     buf[tmp_buf.size()] = '\0';
 

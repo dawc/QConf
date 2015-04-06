@@ -51,9 +51,10 @@ static jobject convert_to_java_map(JNIEnv *env, const qconf_batch_nodes *bnodes)
     }
     char value_c[QCONF_JAVA_CONF_BUF_MAX_LEN];
     int ret = QCONF_ERR_OTHER;
+    size_t len = sizeof(value_c);
     if (NULL == idc)
     {
-        ret = qconf_get_conf(key_c, value_c, sizeof(value_c), NULL);
+        ret = qconf_get_conf(key_c, value_c, &len, NULL);
     }
     else
     {
@@ -64,7 +65,7 @@ static jobject convert_to_java_map(JNIEnv *env, const qconf_batch_nodes *bnodes)
             env->ReleaseStringUTFChars(key, key_c);
             return NULL;
         }
-        ret = qconf_get_conf(key_c, value_c, sizeof(value_c), idc_c);
+        ret = qconf_get_conf(key_c, value_c, &len, idc_c);
         env->ReleaseStringUTFChars(idc, idc_c);
     }
     env->ReleaseStringUTFChars(key, key_c);
